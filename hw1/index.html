@@ -77,6 +77,7 @@
 <p>Finally, the resolve_to_framebuffer function merges the supersampled data back to the final image by averaging the colors of supersamples for each pixel, enhancing edge smoothness and reducing aliasing, thus finalizing the rendering process with improved visual quality.</p>
 
 <div style="text-align: center;">
+    Visualization of test 4 in different sample rates. (from left to right 1, 4, 16)
     <img src="assets/hw1-2.png" alt="Visualization of test 4 at one sample rate" style="width: 30vw;">
     <img src="assets/hw1-3.png" alt="Visualization of test 4 at a higher sample rate" style="width: 30vw;">
     <img src="assets/hw1-4.png" alt="Visualization of test 4 at the highest sample rate" style="width: 30vw;">
@@ -87,6 +88,7 @@
 <p>I changed its translation parameter to (90, -70) and added rotation to the left arm and right arm respectively (35 and -35). This will make the robot look like it is waving its hands.</p>
 
 <div style="text-align: center;">
+    Visualization of test robot.
     <img src="assets/hw1-5.png" alt="Visualization of test robot." style="width: 45vw;">
 </div>
 
@@ -94,10 +96,12 @@
 <p>In a triangle, where each corner (vertex) of the triangle is a planet (with equal weight) and has gravitational force of its own. In this case, they are yellow, red, and green. In this triangle, the position of any object (a point) can be described by how it is influenced by these gravitational forces. For example, the closer it is to yellow and green, the less red color it blends in and may end up showing a mixture of yellow and green. Barycentric coordinates tell us how much each vertex of the triangle contributes to the point's location by its nonlinear proportion of distance to the target location.</p>
 
 <div style="text-align: center;">
+    Visualization of simple triangle.
     <img src="assets/hw1-7.png" alt="Visualization of simple triangle." style="width: 45vw;">
 </div>
 
 <div style="text-align: center;">
+    Visualization of test 7.
     <img src="assets/hw1-6.png" alt="Visualization of test 7." style="width: 45vw;">
 </div>
 
@@ -108,6 +112,7 @@
 <p><strong>Bilinear sampling</strong> is a more sophisticated method that addresses the blockiness of nearest neighbor sampling. It takes the closest four texels to the point being textured and calculates the color by interpolating between these texels. This interpolation considers the distance of each of these four texels to the point, producing a smoother and more blended result.</p>
 
 <div style="text-align: center;">
+    Figures: Visualization of nearest and bilinear sampling at sample rate 1 and 16. Top left: nearest 1. Top right: bilinear 1; Bottom left: nearest 16; Bottom right: bilinear 16.
     <img src="assets/near-1.png" alt="Nearest sampling at sample rate 1" style="width: 45vw;">
     <img src="assets/bi-1.png" alt="Bilinear sampling at sample rate 1" style="width: 45vw;"><br>
     <img src="assets/near-16.png" alt="Nearest sampling at sample rate 16" style="width: 45vw;">
@@ -137,6 +142,7 @@
 <p>As shown in the figure, we can see that adding in more levels and bilinear texture sampling best help antialiasing issue. But adding linear level alone can still help the texture quality.</p>
 
 <div style="text-align: center;">
+    Figures: visualization of different combo of levels and texture sampling. Top left: L\_ZERO and P\_NEAREST. Top right: L\_ZERO and P\_LINEAR; Bottom left: L\_NEAREST and P\_NEAREST; Bottom right: L\_NEAREST and P\_LINEAR.
     <img src="assets/0LnearSample.png" alt="L_ZERO and P_NEAREST" style="width: 45vw;">
     <img src="assets/0LBiSample.png" alt="L_ZERO and P_LINEAR" style="width: 45vw;"><br>
     <img src="assets/nearLnearSample.png" alt="L_NEAREST and P_NEAREST" style="width: 45vw;">
