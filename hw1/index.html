@@ -77,11 +77,14 @@
 <p>Finally, the resolve_to_framebuffer function merges the supersampled data back to the final image by averaging the colors of supersamples for each pixel, enhancing edge smoothness and reducing aliasing, thus finalizing the rendering process with improved visual quality.</p>
 
 <div style="text-align: center;">
-    Visualization of test 4 in different sample rates. (from left to right 1, 4, 16)
-    <img src="assets/hw1-2.png" alt="Visualization of test 4 at one sample rate" style="width: 30vw;">
-    <img src="assets/hw1-3.png" alt="Visualization of test 4 at a higher sample rate" style="width: 30vw;">
-    <img src="assets/hw1-4.png" alt="Visualization of test 4 at the highest sample rate" style="width: 30vw;">
+    <figure>
+        <img src="assets/hw1-2.png" alt="Visualization of test 4 at sample rate 1" style="width: 30vw;">
+        <img src="assets/hw1-3.png" alt="Visualization of test 4 at sample rate 4" style="width: 30vw;">
+        <img src="assets/hw1-4.png" alt="Visualization of test 4 at sample rate 16" style="width: 30vw;">
+        <figcaption>Visualization of Test 4 in Different Sample Rates: (from left to right) 1, 4, 16</figcaption>
+    </figure>
 </div>
+    
 <p><strong>Different Sample rates.</strong> We can see from the overview that sharp jagged edges are smoothed out as the sample rate increases. As we zoom in, we can see that the supersampling enables color averaging at a higher sample rate to make the transition between pixels more continuous and thus making it smoother by looking from afar.</p>
 
     <h2>Task 3: Transforms</h2>
@@ -96,28 +99,35 @@
 <p>In a triangle, where each corner (vertex) of the triangle is a planet (with equal weight) and has gravitational force of its own. In this case, they are yellow, red, and green. In this triangle, the position of any object (a point) can be described by how it is influenced by these gravitational forces. For example, the closer it is to yellow and green, the less red color it blends in and may end up showing a mixture of yellow and green. Barycentric coordinates tell us how much each vertex of the triangle contributes to the point's location by its nonlinear proportion of distance to the target location.</p>
 
 <div style="text-align: center;">
-    Visualization of simple triangle.
-    <img src="assets/hw1-7.png" alt="Visualization of simple triangle." style="width: 45vw;">
+    <figure>
+        <img src="assets/hw1-5.png" alt="Detailed visualization of a test robot with labeled components" style="width: 45vw;">
+        <figcaption>Visualization of Test Robot</figcaption>
+    </figure>
 </div>
 
+<h2>Task 5: "Pixel Sampling" for Texture Mapping</h2>
 <div style="text-align: center;">
-    Visualization of test 7.
-    <img src="assets/hw1-6.png" alt="Visualization of test 7." style="width: 45vw;">
+    <figure>
+        <img src="assets/hw1-7.png" alt="Graphical representation of a simple triangle shape" style="width: 45vw;">
+        <figcaption>A Simple Triangle of Colored Vetexes</figcaption>
+    </figure>
 </div>
 
-    <h2>Task 5: "Pixel Sampling" for Texture Mapping</h2>
 <p>The goal of texture sampling is to create realistic or desired visual effects by accurately mapping the texture onto the model's surface. Two common methods of pixel sampling are nearest neighbor sampling and bilinear sampling.</p>
 
 <p><strong>Nearest neighbor sampling</strong> is when mapping a texture onto a surface, each point on the surface is colored with the color of the closest corresponding pixel (or texel) in the texture image.</p> 
 <p><strong>Bilinear sampling</strong> is a more sophisticated method that addresses the blockiness of nearest neighbor sampling. It takes the closest four texels to the point being textured and calculates the color by interpolating between these texels. This interpolation considers the distance of each of these four texels to the point, producing a smoother and more blended result.</p>
 
 <div style="text-align: center;">
-    Figures: Visualization of nearest and bilinear sampling at sample rate 1 and 16. Top left: nearest 1. Top right: bilinear 1; Bottom left: nearest 16; Bottom right: bilinear 16.
-    <img src="assets/near-1.png" alt="Nearest sampling at sample rate 1" style="width: 45vw;">
-    <img src="assets/bi-1.png" alt="Bilinear sampling at sample rate 1" style="width: 45vw;"><br>
-    <img src="assets/near-16.png" alt="Nearest sampling at sample rate 16" style="width: 45vw;">
-    <img src="assets/bi-16.png" alt="Bilinear sampling at sample rate 16" style="width: 45vw;">
+    <figure>
+        <img src="assets/near-1.png" alt="Nearest sampling at sample rate 1" style="width: 22.5vw;">
+        <img src="assets/bi-1.png" alt="Bilinear sampling at sample rate 1" style="width: 22.5vw;"><br>
+        <img src="assets/near-16.png" alt="Nearest sampling at sample rate 16" style="width: 22.5vw;">
+        <img src="assets/bi-16.png" alt="Bilinear sampling at sample rate 16" style="width: 22.5vw;">
+        <figcaption>Figures: Visualization of Nearest and Bilinear Sampling at Sample Rates 1 and 16. <br>Top left: Nearest 1, Top right: Bilinear 1, Bottom left: Nearest 16, Bottom right: Bilinear 16.</figcaption>
+    </figure>
 </div>
+
 
 <p><strong>Texture Sampling Difference</strong></p>
 <p>We can see that at sample rate 1 and 16, bilinear sampling results in smoother rendering of texture. The effect is more obvious when the sample rate is 1, which might be because of the anti-aliasing effect of increasing sample rate itself. We can see that this particular pattern has a more spiral texture which might result in less rectilinear and jagged texture and is harder to render. By using bilinear sampling, the jagged texture can be better smoothed out.</p>
@@ -142,12 +152,15 @@
 <p>As shown in the figure, we can see that adding in more levels and bilinear texture sampling best help antialiasing issue. But adding linear level alone can still help the texture quality.</p>
 
 <div style="text-align: center;">
-    Figures: visualization of different combo of levels and texture sampling. Top left: L\_ZERO and P\_NEAREST. Top right: L\_ZERO and P\_LINEAR; Bottom left: L\_NEAREST and P\_NEAREST; Bottom right: L\_NEAREST and P\_LINEAR.
-    <img src="assets/0LnearSample.png" alt="L_ZERO and P_NEAREST" style="width: 45vw;">
-    <img src="assets/0LBiSample.png" alt="L_ZERO and P_LINEAR" style="width: 45vw;"><br>
-    <img src="assets/nearLnearSample.png" alt="L_NEAREST and P_NEAREST" style="width: 45vw;">
-    <img src="assets/nearLBiSample.png" alt="L_NEAREST and P_LINEAR" style="width: 45vw;">
+    <figure>
+        <img src="assets/0LnearSample.png" alt="L_ZERO and P_NEAREST" style="width: 22.5vw;">
+        <img src="assets/0LBiSample.png" alt="L_ZERO and P_LINEAR" style="width: 22.5vw;"><br>
+        <img src="assets/nearLnearSample.png" alt="L_NEAREST and P_NEAREST" style="width: 22.5vw;">
+        <img src="assets/nearLBiSample.png" alt="L_NEAREST and P_LINEAR" style="width: 22.5vw;">
+        <figcaption>Figures: Visualization of different combinations of levels and texture sampling. <br>Top left: L_ZERO and P_NEAREST, Top right: L_ZERO and P_LINEAR, Bottom left: L_NEAREST and P_NEAREST, Bottom right: L_NEAREST and P_LINEAR.</figcaption>
+    </figure>
 </div>
+
 
 </body>
 </html>
