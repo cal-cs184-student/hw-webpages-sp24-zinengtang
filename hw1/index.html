@@ -26,7 +26,12 @@
 <h3>No Worse than Brute Force</h3>
 <p>The provided algorithm improves upon the brute-force approach by potentially incorporating a higher precision check due to the sample rate adjustment. This doesn't inherently reduce the number of checks (as it still iterates over every sample within the bounding box), but it increases the quality of the rasterization with a more precise representation of the triangle's edges. The subpixel accuracy introduced by adjusting coordinates with the sample rate and the offset before checking if a point is inside the triangle allows for a more nuanced fill. This can reduce aliasing artifacts and produce smoother edges compared to a basic brute-force method that only considers whole pixels.</p>
 
-<img src="assets/hw1-1.png" alt="Visualization of test 4." style="width: 40vw;">
+<div style="text-align: center;">
+<figure>
+    <img src="assets/hw1-1.png" alt="Visualization of test 4." style="width: 40vw;">
+    <figcaption>Visualization of test 4.</figcaption>
+</figure>
+</div>
 
 <h3>Extra Credit:</h3>
 <p>The overall latency decreased from 0.01373ms to 0.00503ms on average.</p>
@@ -91,8 +96,10 @@
 <p>I changed its translation parameter to (90, -70) and added rotation to the left arm and right arm respectively (35 and -35). This will make the robot look like it is waving its hands.</p>
 
 <div style="text-align: center;">
-    Visualization of test robot.
-    <img src="assets/hw1-5.png" alt="Visualization of test robot." style="width: 45vw;">
+    <figure>
+        <img src="assets/hw1-5.png" alt="Visualization of test robot." style="width: 45vw;">
+        <figcaption>Visualization of test robot.</figcaption>
+    </figure>
 </div>
 
 <h2>Task 4: Barycentric Coordinates</h2>
