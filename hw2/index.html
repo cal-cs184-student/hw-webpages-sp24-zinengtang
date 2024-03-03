@@ -1,7 +1,203 @@
+<!DOCTYPE html>
 <html>
-	<head>
-	</head>
-	<body>
-		Homework 2 index.html here
-	</body>
+<head>
+    <title>Graphics Homework 2</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        img { max-width: 100%; height: auto; }
+        table { border-collapse: collapse; width: 100%; }
+        td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<h1>Graphics Homework 2</h1>
+<p>Author: Zineng Tang</p>
+
+<h2>Overview</h2>
+<p>
+This homework focused on mesh processing, covering several key operations: Bezier curve and surface evaluation, vertex normal calculation, edge flips, edge splits, and Loop subdivision for mesh upsampling. My approach to each part combined theoretical understanding with practical coding strategies, ensuring robustness and efficiency.
+<br><br>
+1. Bezier Curves and Surfaces: 
+I implemented de Casteljau's algorithm to evaluate Bezier curves and extended this approach to surfaces. The core idea was recursively interpolating between control points until reaching a single point that defines the curve or surface at a given parameter. For surfaces, this process was applied twice: first to generate intermediate curves and then to interpolate between those curves.
+<br>
+2. Area-Weighted Vertex Normals: 
+Calculating vertex normals involved iterating over faces adjacent to each vertex, computing the area-weighted sum of face normals. This approach accounts for the mesh's geometry more accurately than simple averaging, leading to smoother shading effects.
+<br>
+3. Edge Flips and Splits: 
+Edge flips were implemented by reassigning halfedge relationships to effectively "rotate" the edge within its enclosing quadrilateral. Edge splits involved inserting a new vertex at the midpoint of an edge and updating the surrounding topology to maintain mesh consistency. Both operations required careful handling of halfedge pointers to ensure the mesh remained well-formed.
+<br>
+4. Loop Subdivision: 
+The Loop subdivision process began by calculating new positions for existing vertices and midpoints for edges, without immediately altering the mesh structure. I then split edges to increase mesh resolution, followed by selective edge flipping to improve mesh quality. Finally, vertex positions were updated to their new positions. A challenge was ensuring that new elements were correctly marked and handled during subdivision to prevent infinite loops and maintain proper connectivity.
+<br><br>
+Ensuring that operations like edge flips and splits did not corrupt the mesh required meticulous management of halfedge pointers. Visual debugging and incremental testing were crucial here.
+Infinite Loops in Subdivision: Initially, my Loop subdivision implementation led to infinite loops due to improper handling of newly created edges. By segregating original and new edges and carefully controlling iteration, I resolved this issue.
+Performance Optimization: Some parts, particularly Loop subdivision, initially suffered from performance issues. Optimizing the code by reducing redundant calculations and streamlining data access patterns significantly improved efficiency.
+
+<h2>Part 1: Bezier Curves with 1D de Casteljau Subdivision</h2>
+<p>De Casteljau's algorithm is a recursive method for evaluating Bezier curves. The main idea is to linearly interpolate between points that define the Bezier curve, doing this recursively until a single point is obtained, which is a point on the Bezier curve for a given parameter t.
+<br>
+I implemented this algorithm in a function that takes a vector of control points for a Bezier curve and returns the next set of interpolated points. Initially, I create an empty vector to store the next set of points. Then, I iterate through each adjacent pair of control points, linearly interpolate between them using the parameter t, and add the resulting point to the next set of points.
+<br>
+The linear interpolation is done by taking 
+(1−t) times the current point plus 
+t times the next point. The function evaluateStep() is called repeatedly, each time with the result of the previous call, until only one point is left. This final point is the point on the Bezier curve at parameter t.</p>
+
+<div style="text-align: center;">
+<figure>
+    <img src="assets/b0.png" style="width: 30vw;">
+	<img src="assets/b1.png" style="width: 30vw;">
+	<img src="assets/b2.png" style="width: 30vw;">
+	<img src="assets/b3.png" style="width: 30vw;">
+	<img src="assets/b4.png" style="width: 30vw;">
+    <figcaption>Each level of the evaluation.</figcaption>
+</figure>
+</div>
+
+<div style="text-align: center;">
+<figure>
+    <img src="assets/bb0.png" style="width: 30vw;">
+	<img src="assets/bb1.png" style="width: 30vw;">
+	<img src="assets/bb2.png" style="width: 30vw;">
+	<img src="assets/bb3.png" style="width: 30vw;">
+	<img src="assets/bb4.png" style="width: 30vw;">
+    <figcaption>Each level of the evaluation with moved points and decreased t.</figcaption>
+</figure>
+</div>
+
+<h2>Part 2: Bezier Surfaces with Separable 1D de Casteljau</h2>
+<p>
+De Casteljau's algorithm extends to Bezier surfaces by applying the same principle of linear interpolation, but now in two dimensions. A Bezier surface is defined by a grid of control points, and to evaluate a point on the surface, we need to perform linear interpolations in both the u and v parameter directions.
+<br>
+For a Bezier surface, we first apply De Casteljau's algorithm in one parameter direction (say u) to each row of control points, which reduces the grid to a single row of points that represent a Bezier curve. We then apply the algorithm in the other parameter direction (v) to this row to find the final point on the surface.
+<br><br>
+Here's how I implemented it for Bezier surfaces:
+<br>
+1. In the evaluateStep() function, I implemented the linear interpolation step between adjacent control points. For each pair of points, I computed the interpolated point using the parameter t and stored these in nextPoints.
+<br>
+2. In the evaluate1D() function, I used evaluateStep() repeatedly on a given vector of points until it reduced to a single point. This function essentially performs De Casteljau's algorithm in one dimension, for a fixed u or v.
+<br>
+3. In the evaluate() function, I used evaluate1D() to process each row of control points with the parameter u, reducing the grid to a single curve (a row of points). Then I applied evaluate1D() again on this row with the parameter v to find the final point on the surface.
+<br>
+This implementation follows the general approach of De Casteljau's algorithm, extended to two dimensions for Bezier surfaces. It's an elegant way to generalize the curve evaluation algorithm to surfaces, providing a robust and stable method for computing points on a Bezier surface. </p>
+
+<div style="text-align: center;">
+<figure>
+    <img src="assets/pot_bez.png" style="width: 40vw;">
+    <figcaption>A screenshot of bez/teapot.bez.</figcaption>
+</figure>
+</div>
+
+<h2>Part 3: Area-Weighted Vertex Normals</h2>
+<p> 
+To implement the area-weighted vertex normals, I followed a method that takes into account the area of each face adjacent to the vertex. This approach gives a more accurate representation of the vertex normal, especially for meshes with irregular face sizes. Here's how I did it:
+<br>
+1. I started by initializing a zero vector N to accumulate the weighted normals.
+<br>
+2. Using the halfedge data structure, I iterated over all the faces adjacent to the vertex. This was done by starting from one halfedge pointing to the vertex, traversing around the vertex via the twin()->next() links, and stopping once I returned to the original halfedge.
+<br>
+3. For each face that is not a boundary (i.e., it is a real face of the mesh and not an artificial boundary face), I calculated its normal and area. The normal was obtained directly from the face's normal() method. The area was computed as half the norm of the cross product of two edges of the face, which is a standard formula for the area of a triangle given its vertices.
+<br>
+4. I accumulated the weighted normals by adding the product of each face's normal and its area to N. This weighting gives more influence to larger faces adjacent to the vertex.
+<br>
+5. Finally, I normalized the accumulated vector N to get the unit area-weighted normal vector for the vertex.
+</p>
+
+<div style="text-align: center;">
+<figure>
+    <img src="assets/pot_dae0.png" style="width:30vw;">
+	<img src="assets/pot_dae1.png" style="width:30vw;">
+    <figcaption> Teapot shading with and without vertex normals.</figcaption>
+</figure>
+</div>
+
+
+<h2>Part 4: Edge Flip</h2>
+<p>My implementation involves reconfiguring the connectivity around an edge to flip its direction, swapping the diagonal in a quad formed by two adjacent triangles.
+<br>
+1. The first step was to ensure that the edge is not a boundary edge since flipping a boundary edge is undefined. This check immediately returns the original edge if it's a boundary edge.
+<br>
+2. I identified all the halfedges, vertices, and faces involved in the flip operation. This involved not just the halfedges directly connected to the edge to be flipped but also their twins, next halfedges, and the vertices and faces they point to.
+<br>
+3. The crux of the operation was correctly reassigning the next, twin, and vertex pointers for the involved halfedges to reflect the new connectivity. This step required careful planning to ensure that all halfedges still form valid cycles around faces and vertices.
+<br>
+4. After reconfiguring the halfedges, it was necessary to update the halfedge pointers of the vertices involved to ensure they still pointed to a valid halfedge emanating from each vertex.
+<br>
+5. Finally, I made sure the halfedge pointers of the involved edges and faces were updated to reflect the new configuration. This step ensures the mesh's integrity and allows for further operations on the mesh. </p>
+
+<div style="text-align: center;">
+    <figure>
+        <img src="assets/flip0.png" style="width:30vw;">
+		<img src="assets/flip1.png" style="width:30vw;">
+        <figcaption> Screenshots of a mesh before and after some edge flips.</figcaption>
+    </figure>
+</div>
+
+<p>My Journey: I started off by focusing on the edges and vertexes that will potentially change and 
+try to assign them new pointers. But the more I do it the more meesy is becomes. So, then I started everything from scratch and 
+give every possbile vertexes edges etc and assign them one by one. But I confuse my self on where the edges should be at or what they connect. So, instead
+of depending on the naming of the variables, I drew a diagram to show their positions and eventually made through it.</p>
+    
+<h2>Part 5: Edge Split</h2>
+<p> </p>
+
+<div style="text-align: center;">
+    <figure>
+        <img src="assets/split0.png" style="width:30vw;">
+		<img src="assets/split1.png" style="width:30vw;">
+        <figcaption> Screenshots of a mesh before and after some edge splits.</figcaption>
+    </figure>
+</div>
+
+<div style="text-align: center;">
+    <figure>
+        <img src="assets/split0.png" style="width:30vw;">
+		<img src="assets/split1.png" style="width:30vw;">
+        <figcaption> Screenshots of a mesh before and after some edge splits and flips.</figcaption>
+    </figure>
+</div>
+
+<p>My Journey: I learned the lesson and write everything and start eveything from scratch. But there is like one tricky 
+face that always cannot be rendered. So, I tried to ablate each face and finnaly found the workaround.</p>
+
+<h2>Part 6: Loop Subdivision for Mesh Upsampling</h2>
+<p>
+Implementing loop subdivision involved a multi-step process to refine the mesh while preserving its geometric detail and improving smoothness.
+<br>
+1. Vertex Position Update: The first step involved computing new positions for all vertices according to Loop's subdivision rules. I iterated over all vertices, applying the subdivision formula to calculate their new positions. This required calculating the weighted average of neighboring vertex positions, which was stored in Vertex::newPosition to avoid altering the mesh's geometry prematurely.
+<br>
+2. Edge Midpoint Calculation: For each edge, I calculated the positions of new vertices that would be inserted at their midpoints during the subdivision. This step was critical for ensuring that the refined mesh would accurately represent the original geometry's intent.
+<br>
+3. Edge Splitting: After computing new vertex and edge midpoint positions, I iterated over all original edges to split them, inserting new vertices at their calculated midpoints. Special attention was paid to marking newly created edges and vertices as such, to distinguish them from original mesh elements.
+<br>
+4. Edge Flipping: To ensure proper mesh connectivity and smoothness, I flipped edges that connected an original vertex to a newly inserted vertex. This step was crucial for transitioning from the original mesh's connectivity to the refined mesh's topology.
+<br>
+5. Finally, I updated each vertex's position to its previously computed newPosition, effectively moving the vertices to their new locations in the refined mesh.
+</p>
+<p>
+I found that sharp corners and edges gradually are smoothed out. This might be due to the position
+average algorithm and assignment since it averages by its neighbor's positions.
+</p>
+<div style="text-align: center;">
+    <figure>
+        <img src="assets/sub0.png" style="width:25vw;">
+		<img src="assets/sub1.png" style="width:25vw;">
+		<img src="assets/sub2.png" style="width:25vw;">
+        <figcaption> Screenshots of a mesh after some subdivisions.</figcaption>
+    </figure>
+</div>
+
+<p>I flipped every diagonal for every square on the mesh for them orient the same. By ensuring that all the diagonals on the cube's faces are oriented in the same way, I create a mesh where each face is split into triangles in a consistent manner. This uniformity is helpful for subdivision algorithms, which rely on a predictable connectivity pattern to properly traverse vertex positions and create new geometry.</p>
+<div style="text-align: center;">
+    <figure>
+        <img src="assets/subnew0.png" style="width:25vw;">
+		<img src="assets/subnew1.png" style="width:25vw;">
+		<img src="assets/subnew2.png" style="width:25vw;">
+        <figcaption> Screenshots of a mesh after some subdivisions.</figcaption>
+    </figure>
+</div>
+
+
+</body>
 </html>
