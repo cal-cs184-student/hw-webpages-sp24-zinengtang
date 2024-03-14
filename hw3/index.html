@@ -1,7 +1,45 @@
+<!DOCTYPE html>
 <html>
-	<head>
-	</head>
-	<body>
-		Homework 3 index.html here
-	</body>
+<head>
+    <title>Graphics Homework 3</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        img { max-width: 100%; height: auto; }
+        table { border-collapse: collapse; width: 100%; }
+        td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<h1>Graphics Homework 3</h1> 
+<p>Author: Zineng Tang</p>
+
+<h2>Overview</h2>
+<p>
+In the rendering pipeline, particularly within the context of ray tracing, the process starts with generating rays from the camera and then finding intersections between these rays and scene primitives, such as triangles. This pipeline is crucial for determining what parts of the scene are visible from the camera's perspective and how they should be shaded. I'll walk you through the ray generation and triangle intersection parts of this pipeline, explaining the triangle intersection algorithm along the way.
+<br>
+Ray Generation
+Ray generation involves creating rays that originate from the camera and pass through each pixel on the image plane. This step translates a 2D pixel coordinate into a 3D ray in the scene. The process generally involves:
+<br>
+Camera Position and Orientation: Determine the position and orientation of the camera in the scene. This information defines the starting point of the rays and the direction they are pointing in space.
+<br>
+Viewing Frustum: Calculate the camera's viewing frustum, which is a pyramid-like volume that represents the portion of the scene visible through the camera. The frustum is defined by the field of view (FOV), aspect ratio, and near and far clipping planes.
+<br>
+Pixel Sampling: For each pixel in the image, calculate a direction vector from the camera position through the pixel. This involves converting the pixel coordinates to normalized device coordinates (ranging from -1 to 1), and then to world coordinates using the camera's projection and view matrices.
+<br>
+Ray Construction: With the direction vector and the camera's position, construct a ray for each pixel. These rays are then used to intersect with the scene geometry to determine visible surfaces.
+</p>
+
+<div style="text-align: center;">
+    <figure>
+        <img src="assets/subnew0.png" style="width:25vw;">
+		<img src="assets/subnew1.png" style="width:25vw;">
+		<img src="assets/subnew2.png" style="width:25vw;">
+        <figcaption> Screenshots of a mesh after some subdivisions.</figcaption>
+    </figure>
+</div>
+
+
+</body>
 </html>
