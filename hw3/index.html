@@ -165,7 +165,7 @@
 
     <p>Both methods aim to accurately estimate the direct lighting component of global illumination by considering the light that arrives directly from light sources to the surfaces in the scene. The choice between uniform hemisphere sampling and importance sampling depends on the scene's complexity, the distribution and intensity of light sources, and the desired trade-off between render time and noise.</p>
 
-<p>Below are images rendered by 2 direct lighting.</p>
+<h3>Comparison of Different Sampling</h3>
     <div style="text-align: center;">
     <figure>
         <img src="assets/3_0.png" style="width:20vw;">
@@ -178,27 +178,28 @@
 	    <img src="assets/3_7.png" style="width:20vw;">
         <figcaption> Top is hemisphere and bottom is importance sampling.</figcaption>
     </figure>
+<p>Based on the comparison of images provided, the renders utilizing light sampling demonstrate a noticeable reduction in noise, particularly within the softer shadows, when compared to those using uniform hemisphere sampling. This reduction is most evident in the transition areas between illuminated and shadowed regions. Light sampling results in images with clearer definition and contrast between these areas due to the sampling method's alignment with the distribution and intensity of the light sources. Conversely, hemisphere sampling's uniform distribution over the hemisphere does not consider light source directionality or intensity, leading to increased noise and less accurate depiction of shadow softness. The images showcase light sampling's advantages in scenes where soft shadows and nuanced lighting effects are significant to the overall visual impact. By focusing computational resources on areas with the most significant visual contribution, light sampling yields cleaner, more precise renders with fewer samples. This is particularly crucial in complex scenes with multiple light sources or materials with different reflective properties, where accurate shadows and light interplay are essential for realism. While light sampling offers clear benefits in noise reduction and shadow fidelity, it may also require additional computational effort to identify relevant light sources for each scene point, underscoring the critical trade-off between computational complexity and render quality in path tracing and global illumination.</p>
 
-<h1>Soft Shadow Noise Comparison</h1>
+<h3>Soft Shadow Noise Comparison</h3>
 <p>Comparing the noise levels in soft shadows with different numbers of light rays during rendering.</p>
 
 <div>
-  <h2>1 Light Ray</h2>
+  <h4>1 Light Ray</h4>
   <img src="path-to-your-image/33_0.png" alt="1 Light Ray" style="width:100%;max-width:300px">
 </div>
 
 <div>
-  <h2>4 Light Rays</h2>
+  <h4>4 Light Rays</h4>
   <img src="path-to-your-image/33_1.png" alt="4 Light Rays" style="width:100%;max-width:300px">
 </div>
 
 <div>
-  <h2>16 Light Rays</h2>
+  <h4>16 Light Rays</h4>
   <img src="path-to-your-image/33_2.png" alt="16 Light Rays" style="width:100%;max-width:300px">
 </div>
 
 <div>
-  <h2>64 Light Rays</h2>
+  <h4>64 Light Rays</h4>
   <img src="path-to-your-image/33_3.png" alt="64 Light Rays" style="width:100%;max-width:300px">
 </div>
 
