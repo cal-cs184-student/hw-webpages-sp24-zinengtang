@@ -89,8 +89,9 @@
         <img src="assets/2_0.png" style="width:20vw;">
 	<img src="assets/2_1.png" style="width:20vw;">
 	<img src="assets/2_2.png" style="width:20vw;">
+	    <img src="assets/2_3.png" style="width:20vw;">
 	    <img src="assets/2_4.png" style="width:20vw;">
-	    <img src="assets/2_5.png" style="width:20vw;">
+<img src="assets/2_5.png" style="width:20vw;">
         <figcaption> Examples of large dae files.</figcaption>
     </figure>
 </div>
@@ -139,6 +140,43 @@
             </tr>
         </table>
     </section>
-	
+<h2>Direct Lighting Function Implementations</h2>
+
+    <h3>1. Uniform Hemisphere Sampling</h3>
+    <p>This method samples directions uniformly across the hemisphere oriented by the surface normal at the hit point. It calculates the direct lighting contribution by casting shadow rays towards the sampled directions and checking for occlusions.</p>
+    <p>The main steps are:</p>
+    <ul>
+        <li>Create a local coordinate system at the intersection point, with the surface normal as the up direction.</li>
+        <li>Uniformly sample directions across the hemisphere.</li>
+        <li>For each sampled direction, create a shadow ray from the hit point in the sampled direction.</li>
+        <li>Check for intersections with the scene. If the shadow ray reaches the light without occlusion, calculate the contribution of this light to the direct illumination at the hit point.</li>
+        <li>Average the contributions from all samples to estimate the direct lighting at the point.</li>
+    </ul>
+
+    <h3>2. Importance Sampling of Lights</h3>
+    <p>This approach directly samples the light sources based on their contribution to the point of interest, which reduces variance and improves the quality of the rendering with fewer samples compared to uniform sampling.</p>
+    <p>The main steps are:</p>
+    <ul>
+        <li>For each light source in the scene, calculate the direction from the hit point to the light and the distance to the light.</li>
+        <li>Create a shadow ray from the hit point towards each light source.</li>
+        <li>If the shadow ray reaches the light source without occlusion, calculate the light's contribution to the direct illumination at the hit point based on the surface's BRDF, the angle between the light direction and the surface normal, and the distance to the light.</li>
+        <li>Accumulate the contributions from all visible light sources to estimate the direct lighting at the point.</li>
+    </ul>
+
+    <p>Both methods aim to accurately estimate the direct lighting component of global illumination by considering the light that arrives directly from light sources to the surfaces in the scene. The choice between uniform hemisphere sampling and importance sampling depends on the scene's complexity, the distribution and intensity of light sources, and the desired trade-off between render time and noise.</p>
+
+<p>Below are images rendered by 2 direct lighting.</p>
+    <div style="text-align: center;">
+    <figure>
+        <img src="assets/3_0.png" style="width:20vw;">
+	<img src="assets/3_1.png" style="width:20vw;">
+	<img src="assets/3_2.png" style="width:20vw;">
+	    <img src="assets/3_2.png" style="width:20vw;">
+	    <img src="assets/3_4.png" style="width:20vw;">
+	    <img src="assets/3_5.png" style="width:20vw;">
+	    <img src="assets/3_6.png" style="width:20vw;">
+	    <img src="assets/3_7.png" style="width:20vw;">
+        <figcaption> Top is hemisphere and bottom is importance sampling.</figcaption>
+    </figure>
 </body>
 </html>
