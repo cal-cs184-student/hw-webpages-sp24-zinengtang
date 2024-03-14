@@ -19,8 +19,21 @@
 <h1>Graphics Homework 3</h1> 
 <p>Author: Zineng Tang</p>
 
-<h2>Overview</h2>
-	
+<h1>Overview</h1>
+<p>
+This project focuses on implementing various techniques in computer graphics rendering, including ray generation, triangle intersection, BVH (Bounding Volume Hierarchy) construction, direct and indirect illumination, and adaptive sampling.
+<br>
+Ray Generation and Triangle Intersection: Implemented ray generation from the camera through each pixel, determining intersections with scene geometry using the Möller-Trumbore algorithm.
+<br>
+BVH Construction: Introduced a BVH acceleration structure to improve rendering efficiency.
+<br>
+Direct Illumination: Examined two sampling methods—uniform hemisphere sampling and importance sampling of lights—to calculate direct lighting.
+<br>
+Global Illumination: For indirect lighting, implemented recursive sampling based on the BSDF, employing Russian Roulette for termination.
+<br>
+Adaptive Sampling: Optimized rendering by varying sample rates per pixel based on variance in lighting conditions.
+
+</p>
 <h1>1. Rendering Pipeline: Ray Generation and Triangle Intersection</h1>
 
     <h2>Ray Generation</h2>
@@ -68,7 +81,7 @@
         Bounding Volume Hierarchy (BVH) is a tree structure on a set of geometric objects. All geometric objects are wrapped in bounding volumes that form the leaf nodes of the tree. These nodes are then grouped as small sets and enclosed within larger bounding volumes. These, in turn, are also grouped and enclosed within other larger bounding volumes in a recursive manner until the whole scene is enclosed in a single bounding volume, forming the root of the BVH.
     </p>
 
-    <h2>Heuristic for Picking the Splitting Point</h2>
+    <h3>Why Picking the Splitting Point</h3>
     <p>
         The heuristic chosen for picking the splitting point in the BVH construction algorithm is the <strong>Surface Area Heuristic (SAH)</strong>. This heuristic minimizes the total cost of intersections by considering both the surface area of the bounding volumes and the number of primitives they contain. The SAH tries to find the split that minimizes the expression:
     </p>
@@ -96,7 +109,7 @@
     </figure>
 </div>
 
-<h1>BVH Acceleration Impact Analysis</h1>
+<h2>BVH Acceleration Impact Analysis</h2>
     <section>
         <p>The utilization of Bounding Volume Hierarchy (BVH) acceleration significantly improves rendering times across a variety of scenes with moderately complex geometries. When comparing the rendering times of scenes with and without BVH acceleration, it is evident that BVH acceleration drastically reduces the time required for rendering. This pattern is consistent across all tested scenes, showcasing the efficiency of BVH in handling complex geometries by effectively minimizing the number of intersection tests required. These results clearly illustrate the impact of BVH acceleration on rendering performance, making it an essential technique for reducing computational costs and improving the efficiency of rendering complex scenes.</p>
     </section>
@@ -168,42 +181,120 @@
     <p>Both methods aim to accurately estimate the direct lighting component of global illumination by considering the light that arrives directly from light sources to the surfaces in the scene. The choice between uniform hemisphere sampling and importance sampling depends on the scene's complexity, the distribution and intensity of light sources, and the desired trade-off between render time and noise.</p>
 
 <h3>Comparison of Different Sampling</h3>
+
     <div style="text-align: center;">
     <figure>
         <img src="assets/3_0.png" style="width:20vw;">
 	<img src="assets/3_1.png" style="width:20vw;">
 	<img src="assets/3_2.png" style="width:20vw;">
-	    <img src="assets/3_2.png" style="width:20vw;">
+	    <img src="assets/3_3.png" style="width:20vw;">
 	    <img src="assets/3_4.png" style="width:20vw;">
 	    <img src="assets/3_5.png" style="width:20vw;">
 	    <img src="assets/3_6.png" style="width:20vw;">
 	    <img src="assets/3_7.png" style="width:20vw;">
         <figcaption> Top is hemisphere and bottom is importance sampling.</figcaption>
     </figure>
+    </div>
 <p>Based on the comparison of images provided, the renders utilizing light sampling demonstrate a noticeable reduction in noise, particularly within the softer shadows, when compared to those using uniform hemisphere sampling. This reduction is most evident in the transition areas between illuminated and shadowed regions. Light sampling results in images with clearer definition and contrast between these areas due to the sampling method's alignment with the distribution and intensity of the light sources. Conversely, hemisphere sampling's uniform distribution over the hemisphere does not consider light source directionality or intensity, leading to increased noise and less accurate depiction of shadow softness. The images showcase light sampling's advantages in scenes where soft shadows and nuanced lighting effects are significant to the overall visual impact. By focusing computational resources on areas with the most significant visual contribution, light sampling yields cleaner, more precise renders with fewer samples. This is particularly crucial in complex scenes with multiple light sources or materials with different reflective properties, where accurate shadows and light interplay are essential for realism. While light sampling offers clear benefits in noise reduction and shadow fidelity, it may also require additional computational effort to identify relevant light sources for each scene point, underscoring the critical trade-off between computational complexity and render quality in path tracing and global illumination.</p>
 
 <h3>Soft Shadow Noise Comparison</h3>
 <p>Comparing the noise levels in soft shadows with different numbers of light rays during rendering.</p>
 
-<div>
-  <h4>1 Light Ray</h4>
-  <img src="path-to-your-image/33_0.png" alt="1 Light Ray" style="width:100%;max-width:300px">
+<div style="text-align: center;">
+  <img src="assets/33_0.png" alt="1 Light Ray" style="width:100%;max-width:300px">
+  <img src="assets/33_1.png" alt="4 Light Rays" style="width:100%;max-width:300px">
+  <img src="assets/33_2.png" alt="16 Light Rays" style="width:100%;max-width:300px">
+  <img src="assets/33_3.png" alt="64 Light Rays" style="width:100%;max-width:300px">
+  <figcaption> 1 / 4 / 16 / 64 Light Ray</figcaption>
 </div>
 
-<div>
-  <h4>4 Light Rays</h4>
-  <img src="path-to-your-image/33_1.png" alt="4 Light Rays" style="width:100%;max-width:300px">
+
+<h1>4. Global Illumination</h1>
+<h2>Indirect Lighting Function Implementation</h2>
+<p>The indirect lighting in our path tracer is computed by recursively sampling the scene's hemispherical light distribution. Starting with the direct lighting component, which is computed using either hemisphere or importance sampling, the algorithm then progresses to calculate indirect illumination. It does this by generating a new sample ray from the intersection point in a direction sampled from the BSDF. This new ray is recursively passed to the at_least_one_bounce_radiance function, which calculates the radiance contribution of the subsequent path segment. If the ray depth reaches the predefined maximum or the Russian Roulette termination condition is met, the recursion stops and the accumulated radiance is returned. Each sample's contribution is weighted by the cosine of the angle it makes with the normal at the intersection point and divided by the probability density function (PDF) associated with the BSDF's sampling strategy. This ensures that the illumination is unbiased and accurately represents the complex interplay of light in the scene. For non-delta materials, emission is returned directly, while for delta materials, which include perfect mirrors and glass, a special reflection or refraction shader is invoked to handle their unique interaction with light.</p>
+
+<h2>Some Rendered Images</h2>
+
+<div style="text-align: center;">
+  <img src="assets/5_0.png" alt="1 Light Ray" style="width:100%;max-width:300px">
+  <img src="assets/4_1.png" alt="4 Light Rays" style="width:100%;max-width:300px">
+  <img src="assets/4_2.png" alt="16 Light Rays" style="width:100%;max-width:300px">
+  <img src="assets/4_3.png" alt="64 Light Rays" style="width:100%;max-width:300px">
+  <figcaption> 1 / 4 / 16 / 64 Light Ray</figcaption>
 </div>
 
-<div>
-  <h4>16 Light Rays</h4>
-  <img src="path-to-your-image/33_2.png" alt="16 Light Rays" style="width:100%;max-width:300px">
+
+<h2>Only Direct vs. Only Indirect</h2>
+<div style="text-align: center;">
+  <img src="assets/4_4.png" style="width:100%;max-width:300px">
+  <img src="assets/44444_2.png" style="width:100%;max-width:300px">
+  <figcaption> Left: only direct; right: only indirect. light source here is not excluded</figcaption>
 </div>
 
-<div>
-  <h4>64 Light Rays</h4>
-  <img src="path-to-your-image/33_3.png" alt="64 Light Rays" style="width:100%;max-width:300px">
+
+<h2>Different Number of Bounces and isAccumBounces=false</h2>
+<p>
+In the rendered images, the 2nd and 3rd bounces of light capture the subtle interplay of light as it reflects off multiple surfaces, adding depth and realism to the scene that rasterization typically lacks. These additional bounces allow for the simulation of complex lighting phenomena such as color bleeding, where light reflects off a colored surface and indirectly tints neighboring areas with its hue. This contributes significantly to the overall image quality, as it introduces a more of a natural light behavior.</p>
+<div style="text-align: center;">
+  <img src="assets/44_0.png" style="width:100%;max-width:300px">
+  <img src="assets/44_1.png" style="width:100%;max-width:300px">
+  <img src="assets/44444_2.png" style="width:100%;max-width:300px">
+  <img src="assets/44444_3.png" style="width:100%;max-width:300px">
+  <img src="assets/44444_4.png" style="width:100%;max-width:300px">
+  <img src="assets/44444_5.png" style="width:100%;max-width:300px">
+  <figcaption> Different number of bounces from 0 to 5</figcaption>
 </div>
+
+<h2>Different Number of Bounces</h2>
+<p>We can see that after the 2nd iter the images are almost the same.</p>
+<div style="text-align: center;">
+  <img src="assets/44_0.png" style="width:100%;max-width:300px">
+  <img src="assets/44_1.png" style="width:100%;max-width:300px">
+  <img src="assets/44_2.png" style="width:100%;max-width:300px">
+  <img src="assets/44_3.png" style="width:100%;max-width:300px">
+  <img src="assets/44_4.png" style="width:100%;max-width:300px">
+  <img src="assets/44_5.png" style="width:100%;max-width:300px">
+  <figcaption> Different number of bounces from 0 to 5</figcaption>
+</div>
+
+<h2>Different Number of Bounces with Russian Roulette rendering </h2>
+<p>max_ray_depth = 100: Although this depth aims for an extremely high level of accuracy in simulating light transport, it's likely that visual differences between depth 100 and much lower depths like 4 or 5 will be minimal to the human eye.</p>
+<div style="text-align: center;">
+  <img src="assets/44_0.png" style="width:100%;max-width:300px">
+  <img src="assets/44_1.png" style="width:100%;max-width:300px">
+  <img src="assets/44_2.png" style="width:100%;max-width:300px">
+  <img src="assets/44_3.png" style="width:100%;max-width:300px">
+  <img src="assets/44_4.png" style="width:100%;max-width:300px">
+  <img src="assets/444_5.png" style="width:100%;max-width:300px">
+  <figcaption> Different number of bounces from 0 to 4 and 100</figcaption>
+</div>
+
+<h2>Different Sample Rates </h2>
+<p>We can see that by using higher sample rates, the smoother the scene becomes.</p>
+<div style="text-align: center;">
+  <img src="assets/4444_0.png" style="width:100%;max-width:300px">
+  <img src="assets/4444_1.png" style="width:100%;max-width:300px">
+  <img src="assets/4444_2.png" style="width:100%;max-width:300px">
+  <img src="assets/4444_3.png" style="width:100%;max-width:300px">
+  <img src="assets/4444_4.png" style="width:100%;max-width:300px">
+  <img src="assets/4444_5.png" style="width:100%;max-width:300px">
+  <img src="assets/4444_6.png" style="width:100%;max-width:300px">
+  <figcaption> Different sample rates 1, 2, 4, 8, 16, 64, 1024</figcaption>
+</div>
+
+<h1>5. Adaptive Sampling</h1>
+<h2>Adaptive Sampling Explanation</h2>
+<p>Adaptive sampling is an optimization technique that adjusts the number of samples taken per pixel based on the variance of the lighting within that pixel's region. The goal is to allocate more samples to areas with higher variance—typically edges or areas with complex lighting—to reduce noise, while using fewer samples in more uniform areas. In the implementation, we start by sampling each pixel a few times and computing the variance of the radiance. If the variance is above a certain threshold, we continue to sample, up to a maximum sample limit. This ensures that the computational effort is focused on areas where it is most needed, enabling faster rendering times without sacrificing image quality.</p>
+
+ <h2>Sampling</h2>
+ <div style="text-align: center;">
+  <img src="assets/5_0.png" style="width:100%;max-width:300px" alt="Uniform Hemisphere Sampling Image 1">
+  <img src="assets/5_0_rate.png" style="width:100%;max-width:300px" alt="Uniform Hemisphere Sampling Image 2">
+  <img src="assets/5_1.png" style="width:100%;max-width:300px" alt="Uniform Hemisphere Sampling Image 1">
+  <img src="assets/5_1_rate.png" style="width:100%;max-width:300px" alt="Uniform Hemisphere Sampling Image 2">
+  <figcaption>both of sample rate image</figcaption>
+</div>
+
 
 </body>
 </html>
