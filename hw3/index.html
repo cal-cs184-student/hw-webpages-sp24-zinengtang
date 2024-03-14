@@ -18,8 +18,9 @@
 <h2>Overview</h2>
 <p>
 In the rendering pipeline, particularly within the context of ray tracing, the process starts with generating rays from the camera and then finding intersections between these rays and scene primitives, such as triangles. This pipeline is crucial for determining what parts of the scene are visible from the camera's perspective and how they should be shaded. I'll walk you through the ray generation and triangle intersection parts of this pipeline, explaining the triangle intersection algorithm along the way.
-<br>
+<br><br>
 Ray Generation
+<br><br>
 Ray generation involves creating rays that originate from the camera and pass through each pixel on the image plane. This step translates a 2D pixel coordinate into a 3D ray in the scene. The process generally involves:
 <br>
 Camera Position and Orientation: Determine the position and orientation of the camera in the scene. This information defines the starting point of the rays and the direction they are pointing in space.
