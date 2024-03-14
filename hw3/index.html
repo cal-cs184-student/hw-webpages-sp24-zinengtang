@@ -16,28 +16,41 @@
 <p>Author: Zineng Tang</p>
 
 <h2>Overview</h2>
-<p>
-In the rendering pipeline, particularly within the context of ray tracing, the process starts with generating rays from the camera and then finding intersections between these rays and scene primitives, such as triangles. This pipeline is crucial for determining what parts of the scene are visible from the camera's perspective and how they should be shaded. I'll walk you through the ray generation and triangle intersection parts of this pipeline, explaining the triangle intersection algorithm along the way.
-<br><br>
-Ray Generation
-<br><br>
-Ray generation involves creating rays that originate from the camera and pass through each pixel on the image plane. This step translates a 2D pixel coordinate into a 3D ray in the scene. The process generally involves:
-<br>
-Camera Position and Orientation: Determine the position and orientation of the camera in the scene. This information defines the starting point of the rays and the direction they are pointing in space.
-<br>
-Viewing Frustum: Calculate the camera's viewing frustum, which is a pyramid-like volume that represents the portion of the scene visible through the camera. The frustum is defined by the field of view (FOV), aspect ratio, and near and far clipping planes.
-<br>
-Pixel Sampling: For each pixel in the image, calculate a direction vector from the camera position through the pixel. This involves converting the pixel coordinates to normalized device coordinates (ranging from -1 to 1), and then to world coordinates using the camera's projection and view matrices.
-<br>
-Ray Construction: With the direction vector and the camera's position, construct a ray for each pixel. These rays are then used to intersect with the scene geometry to determine visible surfaces.
-</p>
+<h1>Rendering Pipeline: Ray Generation and Triangle Intersection</h1>
+
+    <h2>Ray Generation</h2>
+    <p>
+        Ray generation involves creating rays that originate from the camera and pass through each pixel on the image plane. The process includes:
+    </p>
+    <ol>
+        <li><strong>Camera Position and Orientation:</strong> Determine the position and orientation of the camera in the scene.</li>
+        <li><strong>Viewing Frustum:</strong> Calculate the camera's viewing frustum, defined by the field of view (FOV), aspect ratio, and near and far clipping planes.</li>
+        <li><strong>Pixel Sampling:</strong> For each pixel, calculate a direction vector from the camera position through the pixel, converting pixel coordinates to world coordinates.</li>
+        <li><strong>Ray Construction:</strong> Construct a ray for each pixel with the direction vector and the camera's position. These rays intersect with the scene geometry to determine visible surfaces.</li>
+    </ol>
+
+    <h2>Triangle Intersection</h2>
+    <p>
+        The triangle intersection algorithm determines if and where a ray intersects a triangle in the scene, based on the Möller-Trumbore intersection algorithm:
+    </p>
+    <ol>
+        <li><strong>Triangle Definition:</strong> Defined by its three vertices \(V_1, V_2, V_3\), calculate two edge vectors \(E_1 = V_2 - V_1\) and \(E_2 = V_3 - V_1\).</li>
+        <li><strong>Determinant and Ray Direction:</strong> Calculate the determinant including the ray direction vector \(D\) and edge vectors \(E_1, E_2\) to find if the ray intersects the triangle's plane.</li>
+        <li><strong>Barycentric Coordinates:</strong> Calculate the barycentric coordinates (\(u, v\)) to determine if the intersection point lies within the triangle.</li>
+        <li><strong>Intersection Point:</strong> If \(0 \leq u \leq 1\), \(0 \leq v \leq 1\), and \(u + v \leq 1\), the ray intersects the triangle, determining the intersection point using \(t\).</li>
+        <li><strong>Normal Calculation:</strong> Calculate the surface normal at the intersection point, which is constant for a flat triangle and calculated as the cross product of \(E_1\) and \(E_2\).</li>
+    </ol>
 
 <div style="text-align: center;">
     <figure>
-        <img src="assets/subnew0.png" style="width:25vw;">
-		<img src="assets/subnew1.png" style="width:25vw;">
-		<img src="assets/subnew2.png" style="width:25vw;">
-        <figcaption> Screenshots of a mesh after some subdivisions.</figcaption>
+        <img src="assets/1_0.png" style="width:20vw;">
+	<img src="assets/1_1.png" style="width:20vw;">
+	<img src="assets/1_3.png" style="width:20vw;">
+	    <img src="assets/1_4.png" style="width:20vw;">
+	    <img src="assets/1_5.png" style="width:20vw;">
+	    <img src="assets/1_6.png" style="width:20vw;">
+	    <img src="assets/1_7.png" style="width:20vw;">
+        <figcaption> Screenshots of normal shading.</figcaption>
     </figure>
 </div>
 
