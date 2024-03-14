@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Graphics Homework 3</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
@@ -16,7 +18,8 @@
 <p>Author: Zineng Tang</p>
 
 <h2>Overview</h2>
-<h1>Rendering Pipeline: Ray Generation and Triangle Intersection</h1>
+	
+<h1>1. Rendering Pipeline: Ray Generation and Triangle Intersection</h1>
 
     <h2>Ray Generation</h2>
     <p>
@@ -45,6 +48,7 @@
     <figure>
         <img src="assets/1_0.png" style="width:20vw;">
 	<img src="assets/1_1.png" style="width:20vw;">
+	    <img src="assets/1_2.png" style="width:20vw;">
 	<img src="assets/1_3.png" style="width:20vw;">
 	    <img src="assets/1_4.png" style="width:20vw;">
 	    <img src="assets/1_5.png" style="width:20vw;">
@@ -55,5 +59,39 @@
 </div>
 
 
+	<h1>2. BVH Construction and Rendering with Normal Shading</h1>
+
+    <h2>BVH Construction Algorithm</h2>
+    <p>
+        Bounding Volume Hierarchy (BVH) is a tree structure on a set of geometric objects. All geometric objects are wrapped in bounding volumes that form the leaf nodes of the tree. These nodes are then grouped as small sets and enclosed within larger bounding volumes. These, in turn, are also grouped and enclosed within other larger bounding volumes in a recursive manner until the whole scene is enclosed in a single bounding volume, forming the root of the BVH.
+    </p>
+
+    <h2>Heuristic for Picking the Splitting Point</h2>
+    <p>
+        The heuristic chosen for picking the splitting point in the BVH construction algorithm is the <strong>Surface Area Heuristic (SAH)</strong>. This heuristic minimizes the total cost of intersections by considering both the surface area of the bounding volumes and the number of primitives they contain. The SAH tries to find the split that minimizes the expression:
+    </p>
+    <p>\(Cost = C_{trav} + (P_{L} \cdot A_{L} + P_{R} \cdot A_{R}) / A_{total}\)</p>
+    <ul>
+        <li>\(C_{trav}\): Cost of traversing a node (fixed cost).</li>
+        <li>\(P_{L}, P_{R}\): The number of primitives on the left and right side of the split.</li>
+        <li>\(A_{L}, A_{R}, A_{total}\): The surface areas of the bounding volumes on the left, right, and the total surface area of the node being split.</li>
+    </ul>
+    <p>
+        By evaluating this cost for possible splits at different positions and choosing the one with the lowest cost, the algorithm effectively balances the tree, reducing the overall number of intersection tests required during rendering.
+    </p>
+
+    <h2>Rendered Images with Normal Shading</h2>
+    <p>Below are images rendered using BVH acceleration with normal shading, which significantly speeds up rendering times for complex scenes.</p>
+    <div style="text-align: center;">
+    <figure>
+        <img src="assets/2_0.png" style="width:20vw;">
+	<img src="assets/2_1.png" style="width:20vw;">
+	<img src="assets/2_2.png" style="width:20vw;">
+	    <img src="assets/2_4.png" style="width:20vw;">
+	    <img src="assets/2_5.png" style="width:20vw;">
+        <figcaption> Examples of large dae files.</figcaption>
+    </figure>
+</div>
+	
 </body>
 </html>
