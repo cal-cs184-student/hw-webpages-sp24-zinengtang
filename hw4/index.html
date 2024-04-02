@@ -1,7 +1,403 @@
+<!DOCTYPE html>
 <html>
-	<head>
-	</head>
-	<body>
-		Homework 4 index.html here
-	</body>
+<head>
+    <title>Cloth Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .figures-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .figure {
+            flex: 1;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .figure img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .caption {
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Part 1: Cloth Simulation Wireframe Analysis</h2>
+        <p>Below are the visual representations of the cloth wireframe under three different constraint settings.</p>
+        
+        <div class="figures-row">
+            <div class="figure">
+                <img src="assets/p1_0.png" alt="Cloth Wireframe without Shearing Constraints">
+                <div class="caption">Figure 1: Without any shearing constraints.</div>
+            </div>
+
+            <div class="figure">
+                <img src="assets/p1_1.png" alt="Cloth Wireframe with Only Shearing Constraints">
+                <div class="caption">Figure 2: With only shearing constraints.</div>
+            </div>
+
+            <div class="figure">
+                <img src="assets/p1_2.png" alt="Cloth Wireframe with All Constraints">
+                <div class="caption">Figure 3: With all constraints (structural, shearing, and bending).</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container">
+    <h2>Part 2: Parameter Effects on Cloth Simulation</h2>
+
+    <div class="figures-row">
+        <div class="figure" style="flex: 0 0 30%;">
+            <img src="assets/default.png" alt="Cloth with default">
+            <div class="caption">Cloth with default settings.</div>
+        </div>
+    </div>
+    
+    
+    <div class="figures-row">
+    <!-- Spring Constant Observation -->
+    <div class="figure">
+        <img src="assets/high_ks=200k.png" alt="Cloth with High ks">
+        <div class="caption">Cloth with high ks: The cloth is more stable and holds its shape better.</div>
+    </div>
+    <div class="figure">
+        <img src="assets/low_ks=50.png" alt="Cloth with Low ks">
+        <div class="caption">Cloth with low ks: Opposite Behavior.</div>
+    </div>
+    </div>
+   
+    <div class="figures-row">
+    <!-- Density Observation -->
+    <div class="figure">
+        <img src="assets/high_density=1500.png" alt="Cloth with Higher Density">
+        <div class="caption">Cloth with higher density=1500: It hangs heavier and displays more curvature at the top and less stability and more bumping.</div>
+    </div>
+    <div class="figure">
+        <img src="assets/low_density=10.png" alt="Cloth with Lower Density">
+        <div class="caption">Cloth with lower density=10: Opposite Behavior.</div>
+    </div>
+    </div>
+    
+    <div class="figures-row">
+    	<div class="figure">
+        <img src="assets/high_damping=0.7%.png" alt="Cloth with High Damping">
+        <div class="caption">Cloth with higher damping: Exhibits less momentum upon release.</div>
+    </div>
+    <!-- Damping Observation -->
+    <div class="figure">
+        <img src="assets/low_damping=0.png" alt="Cloth with Low Damping">
+        <div class="caption">Cloth with lower damping: Opposite Behavior.</div>
+    </div>
+    </div>
+
+         <p>Changing the spring constant ks has a significant impact on the cloth's behavior. A low ks results in a cloth that appears very unstable and shakes more, while a high ks makes the cloth more stable and less prone to drastic deformations.</p>
+
+    <p>Modifying the density of the cloth affects its weight and how it drapes. A lower density leads to a cloth that appears ligher and exhibits less pronounced curves, especially at the top where it is pinned.</p>
+        <p>The damping parameter controls how quickly the cloth comes to rest after being disturbed. Lower damping allows the cloth to swing more freely, while higher damping results in the cloth moving more sluggishly and coming to rest more quickly.</p>
+
+    
+
+    <!-- Final Resting State from scene/pinned4.json -->
+    <div class="figures-row">
+    	<div class="figure" style="flex: 0 0 30%;">
+	        <img src="assets/pinned4_final_rest.png" alt="Cloth from scene/pinned4.json in Final Resting State">
+	        <div class="caption">Cloth from scene/pinned4.json in its final resting state. Parameters: density=150, ks=50k, damping=0.09%.</div>
+	    </div>
+    </div>
+    
+
+    <p>The final image shows the cloth from scene/pinned4.json with altered parameters in its final resting state, illustrating the combined effects of these properties on the cloth simulation.</p>
+</div>
+</div>
+
+<div class="container">
+    <h2>Part 3: Cloth on Sphere and Plane</h2>
+    
+    <!-- Cloth on Sphere with Different ks -->
+    <h3>Cloth on Sphere with Different Spring Constants</h3>
+    <div class="figures-row">
+        <div class="figure" style="flex: 1;">
+            <img src="assets/ks=500.png" alt="Cloth with ks = 500">
+            <div class="caption">Cloth with ks = 500: The cloth appears softer and drapes more.</div>
+        </div>
+        <div class="figure" style="flex: 1;">
+            <img src="assets/ks=5000.png" alt="Cloth with ks = 5000">
+            <div class="caption">Cloth with ks = 5000 (default): Balances between softness and stiffness.</div>
+        </div>
+        <div class="figure" style="flex: 1;">
+            <img src="assets/ks=50000.png" alt="Cloth with ks = 50000">
+            <div class="caption">Cloth with ks = 50000: The cloth is stiffer and holds its shape more.</div>
+        </div>
+    </div>
+    <p>The spring constant ks significantly affects the cloth's behavior on the sphere. A lower ks makes the cloth drape and conform to the sphere more, while a higher ks causes the cloth to be stiffer and maintain more of its initial shape.</p>
+    
+    <!-- Cloth on Plane -->
+    <h3>Cloth at Rest on Plane</h3>
+    <div class="figures-row">
+	    <div class="figure" style="flex: 0 0 30%;">
+	        <img src="assets/cloth_plane.png" alt="Colored Cloth on Plane">
+	        <div class="caption">Cloth lying peacefully at rest on the plane, showcasing a creative use of color.</div>
+	    </div>
+	</div>
+    <p>The final image displays the cloth lying flat on the plane.</p>
+</div>
+
+
+<div class="container">
+    <h2>Part 4: Cloth Falling and Folding Simulation</h2>
+    
+    <h3>Documenting Cloth Self-Collision and Resting State</h3>
+    <p>The following sequence of images captures the cloth as it begins to fall, collides with itself, and finally comes to a rest.</p>
+    
+    <div class="figures-row">
+        <!-- Initial Self-Collision -->
+        <div class="figure" style="flex: 1;">
+            <img src="assets/phase0.png" alt="Initial Self-Collision">
+            <div class="caption">Phase 1: Early stages of cloth self-collision.</div>
+        </div>
+        
+        <!-- During the Fall -->
+        <div class="figure" style="flex: 1;">
+            <img src="assets/phase1.png" alt="During the Fall">
+            <div class="caption">Phase 2: Cloth continues to fall and fold.</div>
+        </div>
+        
+        <!-- Further Folding -->
+        <div class="figure" style="flex: 1;">
+            <img src="assets/phase2.png" alt="Further Folding">
+            <div class="caption">Phase 3: Advanced folding as the cloth settles.</div>
+        </div>
+    	<!-- More Restful State -->
+	    <div class="figure" style="flex: 1;">
+	        <img src="assets/phase3.png" alt="Restful State">
+	        <div class="caption">Phase 4: Cloth in a more restful state, still slightly bouncy.</div>
+	    </div>
+    </div>
+    
+    <p>This simulation showcases the dynamic behavior of cloth as it interacts with itself and the environment.</p>
+
+    <!-- <div class="container"> -->
+    <h2>Effect of Varying Density and Spring Constant on Cloth Behavior</h2>
+    
+    <!-- Density -->
+    <h3>Lower Density (10 g/cm²)</h3>
+    <div class="figures-row">
+        <div class="figure">
+            <img src="assets/density=10_phase0.png" alt="Initial phase with low density">
+            <div class="caption">Phase 0: Beginning of fall, cloth is starting to drape.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/density=10_phase1.png" alt="Cloth falling with low density">
+            <div class="caption">Phase 1: Cloth develops broad folds.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/density=10_phase2.png" alt="Cloth folding with low density">
+            <div class="caption">Phase 2: Folds become more pronounced.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/density=10_phase3.png" alt="Cloth at rest with low density">
+            <div class="caption">Phase 3: Resting state with soft folds.</div>
+        </div>
+    </div>
+    <p> With a lower density, the cloth seems to fall more slowly and delicately. It doesn't collapse as heavily onto itself, leading to a less pronounced folding effect. The folds that do form are more gentle and the cloth appears to flutter as it settles.</p>
+
+    <h3>Higher Density (150 g/cm²)</h3>
+    <div class="figures-row">
+        <div class="figure">
+            <img src="assets/density=1500_phase0.png" alt="Cloth with higher density - initial drop">
+            <div class="caption">Phase 0: Cloth beginning to settle under increased density.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/density=1500_phase1.png" alt="Cloth with higher density - mid fall">
+            <div class="caption">Phase 1: Cloth folding onto itself, influenced by greater mass.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/density=1500_phase2.png" alt="Cloth with higher density - further folding">
+            <div class="caption">Phase 2: Continued folding under the force of gravity.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/density=1500_phase3.png" alt="Cloth with higher density - resting state">
+            <div class="caption">Phase 3: Cloth conforming to the ground, lying flat due to weight.</div>
+        </div>
+    </div>
+
+    <p> The cloth moves with more weight, causing it to fall faster and impact itself with more force, leading to more compressed and tighter folds. The higher mass results in more momentum, making the cloth less responsive to forces that counteract gravity, such as the spring forces within the cloth itself or air resistance. As it comes to rest, the higher density cloth exhibits a more flattened appearance due to the increased weight pressing down.</p>
+
+    <h3>Lower Spring Constant (ks = 50 N/m)</h3>
+    <div class="figures-row">
+        <div class="figure">
+            <img src="assets/ks=50_phase0.png" alt="Cloth with lower ks - initial drop">
+            <div class="caption">Phase 0: Initial collapse, with folds beginning to form.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/ks=50_phase1.png" alt="Cloth with lower ks - mid fall">
+            <div class="caption">Phase 1: Cloth draping dramatically with very pronounced folding.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/ks=50_phase2.png" alt="Cloth with lower ks - further folding">
+            <div class="caption">Phase 2: Cloth showing significant sagging and folding.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/ks=50_phase3.png" alt="Cloth with lower ks - resting state">
+            <div class="caption">Phase 3: Cloth conformed closely to the ground, with little structural support.</div>
+        </div>
+    </div>
+
+
+    <p> The cloth behaves much more like a liquid or very soft material, draping significantly and showing very little resistance to bending and folding. It sags quickly upon itself with very pronounced and deep folds due to the minimal resistance to deformation. In the rest state, the cloth almost flattens out, conforming closely to the ground as the springs do not provide sufficient force to support the cloth's structure.
+</p>
+    
+    <!-- Spring Constant -->
+    <h3>Higher Spring Constant (50,000 N/m)</h3>
+    <div class="figures-row">
+        <div class="figure">
+            <img src="assets/ks=50k_phase0.png" alt="Initial phase with high ks">
+            <div class="caption">Phase 0: Cloth starts to fall, maintaining shape.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/ks=50k_phase1.png" alt="Cloth falling with high ks">
+            <div class="caption">Phase 1: Sharp folds begin to form.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/ks=50k_phase2.png" alt="Cloth folding with high ks">
+            <div class="caption">Phase 2: Folds are defined and crisp.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/ks=50k_phase3.png" alt="Cloth at rest with high ks">
+            <div class="caption">Phase 3: Resting state with distinct creases.</div>
+        </div>
+    </div>
+    <p>A higher spring constant results in a cloth that is much more resistant to bending and stretching. This causes the cloth to maintain more of its shape as it falls, leading to sharper and more pronounced folds. </p>
+<!-- </div> -->
+</div>
+
+<div class="container">
+    <h2>Part 4: Cloth Falling and Folding Simulation</h2>
+    <p>A <strong>shader program</strong> is a set of computer graphics instructions that dictate how to render each pixel. It's comprised of:</p>
+    <ul>
+        <li>
+            <strong>Vertex Shader:</strong> Transforms 3D vertex data to 2D and prepares vertex-related attributes for the next stage.
+        </li>
+        <li>
+            <strong>Fragment Shader:</strong> Determines the final color and texture of each pixel by using data passed from the vertex shader, performing complex calculations to simulate lighting and material effects.
+        </li>
+    </ul>
+    <p>Together, these shaders work in tandem to craft the visual details of objects within a 3D scene, rendering realistic or stylized surface effects based on light and material interactions.</p>
+
+    <h3>Blinn-Phong Shading Model Components</h3>
+    <p>The Blinn-Phong shading model is a commonly used algorithm in 3D graphics for calculating the color of each pixel based on the lighting, view direction, and material properties. It consists of three main components:
+
+Ambient: This is a basic color applied to every pixel to simulate indirect light in the environment. It doesn't depend on light direction or viewer perspective.
+Diffuse: This component simulates direct light absorbed and reflected uniformly by the surface. It depends on the angle between the light source and the surface normal.
+Specular: This component models the bright highlight that is seen when a light source reflects off a shiny surface. It depends on the surface's shininess and the angle between the viewer and the reflection direction.
+</p>
+    <div class="figures-row">
+        <div class="figure">
+            <img src="assets/ambient.png" alt="Ambient Component">
+            <div class="caption">Ambient Component: Uniform light across the object.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/diffuse.png" alt="Diffuse Component">
+            <div class="caption">Diffuse Component: Light diffused across the surface.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/specular.png" alt="Specular Component">
+            <div class="caption">Specular Component: Highlights reflecting the light source.</div>
+        </div>
+        <div class="figure">
+            <img src="assets/phong.png" alt="Full Blinn-Phong Model">
+            <div class="caption">Full Blinn-Phong Model: Combination of all components.</div>
+        </div>
+</div>
+
+    <h3>Custom Texture Mapping on Cloth Simulation</h3>
+    <p>Below is the screenshot of the cloth simulation using a custom texture, which has been applied to give the cloth a unique appearance.</p>
+    <div class="figures-row">
+	    <div class="figure" style="flex: 0 0 30%;">
+        <img src="assets/own_texture.png" alt="Custom Textured Cloth">
+        <div class="caption">Cloth with a custom texture applied via a texture mapping shader.</div>
+    </div>
+    </div>
+
+
+<h3>Bump Mapping vs Displacement Mapping</h3>
+    <div class="figures-row">
+        <div class="figure">
+            <img src="assets/bump_cloth.png" alt="Bump Mapping on Cloth">
+            <div class="caption">Bump Mapping on Cloth</div>
+        </div>
+        <div class="figure">
+            <img src="assets/bump_sphere.png" alt="Bump Mapping on Sphere">
+            <div class="caption">Bump Mapping on Sphere</div>
+        </div>
+        <div class="figure">
+            <img src="assets/displacement_sphere.png" alt="Displacement Mapping on Sphere">
+            <div class="caption">Displacement Mapping on Sphere</div>
+        </div>
+    </div>
+
+    <p>Bump mapping simulates texture details without altering the mesh's geometry, which is evident from the cloth and sphere images. This gives an illusion of depth but no actual modification to the object's contour. Displacement mapping, on the other hand, physically alters the geometry, creating realistic ridges and bumps on the sphere's surface.</p>
+    
+    <h3>Mesh Coarseness Reaction</h3>
+    <div class="figures-row">
+        <div class="figure">
+            <img src="assets/bump_o16a16.png" alt="Bump Mapping on Coarse Mesh">
+            <div class="caption">Bump Mapping with Coarseness -o 16 -a 16</div>
+        </div>
+        <div class="figure">
+            <img src="assets/bump_o128a128.png" alt="Bump Mapping on Fine Mesh">
+            <div class="caption">Bump Mapping with Coarseness -o 128 -a 128</div>
+        </div>
+        <div class="figure">
+            <img src="assets/displacement_o16a16.png" alt="Displacement Mapping on Coarse Mesh">
+            <div class="caption">Displacement Mapping with Coarseness -o 16 -a 16</div>
+        </div>
+        <div class="figure">
+            <img src="assets/displacement_o128a128.png" alt="Displacement Mapping on Fine Mesh">
+            <div class="caption">Displacement Mapping with Coarseness -o 128 -a 128</div>
+        </div>
+    </div>
+    <p>With bump mapping, changes in mesh coarseness are less impactful, as the technique doesn't change the mesh's topology. Finer meshes result in smoother perceived texture. Displacement mapping shows more pronounced changes with mesh coarseness; a finer mesh enables more detailed and accurate displacement, creating a more realistic effect.</p>
+
+
+	<h3>Mirror Shader on Cloth and Sphere</h3>
+    <div class="figures-row">
+        <div class="figure">
+            <img src="assets/mirror_cloth.png" alt="Mirror Shader on Cloth">
+            <div class="caption">Mirror Shader on Cloth</div>
+        </div>
+        <div class="figure">
+            <img src="assets/mirror_sphere.png" alt="Mirror Shader on Sphere">
+            <div class="caption">Mirror Shader on Sphere</div>
+        </div>
+    </div>
+
+    <p>The mirror shader creates a reflective surface that can simulate materials like metal or water by reflecting the environment. The effect on the sphere creates a perfect mirror-like appearance, while on the cloth, the reflections follow the folds and creases, highlighting the simulation's dynamic geometry.</p>
+
+
+</div>
+</div>
+
+
+</body>
 </html>
